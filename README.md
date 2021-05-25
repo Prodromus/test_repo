@@ -381,8 +381,10 @@ Metadata about these Runs, including submitted sample and library information, B
 > > Please note that there are 2 Snepff tools, please choose the one for SARS-CoV-2
 > > 
 > {: .comment}
+> >
 > 13. Under `Sequence changes` click the `multiple datasets` option, then select the vcf files that were downloaded.
 > 14. Click `execute`.
+> >
 {: .hands_on}
 
 
