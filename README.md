@@ -200,13 +200,14 @@ Now that a table has been generated, we will query the table to find the runs of
 > > ### {% icon tip %} Column Headers for the Other Metadata Tables
 > > We are not going to bring in the other metadata tables in this tutorial. Here is a list of column headers for contigs and the other tables.
 > > You can find full definitions for these columns here:
+> > 
 > > [https://www.ncbi.nlm.nih.gov/sra/docs/sra-cloud-based-examples/](https://www.ncbi.nlm.nih.gov/sra/docs/sra-cloud-based-examples/)
+> > 
 > > [https://www.ncbi.nlm.nih.gov/sra/docs/aligned-metadata-tables/](https://www.ncbi.nlm.nih.gov/sra/docs/sra-cloud-based-examples/)
 > >
 > > **contigs**
 > > ```
 > > name,run,coverage,tax_id,hits,length,md5
-> > 
 > > ```
 > > **annotated_variations**
 > > ```
