@@ -16,20 +16,20 @@ Authors: Jon Trow and Adelaide Rhodes
 
 # Description of the Workshop
 
-Traditionally, after a list of run accessions has been filtered on the NCBI website, the accessions are used to download and extract fastq using the SRA toolkit to enter into the next steps of the workflow. A newer compressed data type generated from raw submission data for sequences containing hits to SARS-CoV-2 is also accessible to Galaxy users from SRA in the Cloud.
+Traditionally, after a list of run accessions has been filtered on the NCBI website, the accessions are used to download and extract fastq using the SRA toolkit to enter into the next steps of the workflow. A newer compressed data type, generated from raw submitted data containing SARS-CoV-2 sequence, is also accessible to Galaxy users from SRA in the Cloud.
 
 
 SRA Aligned Read Format (SARF) provides further output options beyond basic fastq format, for example: 
 
-1. contigs created from the raw reads in the run (fasta format)
-2. reads aligned back to the contigs (sam format)
+1. contigs created from the raw reads in the run
+2. reads aligned back to the contigs
 3. reads with placeholder quality scores
 4. VCF files can also be downloaded for these records relative to the SARS-CoV-2 RefSeq record
 
 
 - These formats can speed up workflows such as assembly and variant calling.
 - This data format is still referenced by the Run accession and accessed using the sra toolkit.
-- This workshop describes the SARF data objects and demonstrate a few ways to enter them into traditional workflows.
+- This workshop describes the SARF data objects along with associated searchable metadata, and demonstrates a few ways to enter them into traditional workflows.
 
 ## Questions that will be answered in this workshop:
 
@@ -65,7 +65,7 @@ The SRA aligned reads, the VCF files, the results of these analyses (such as BLA
 
 > ### {% icon comment %} Comment
 >
-> These data can be dumped in `sam` format using the `sam-dump` tool in the SRA Toolkit, this function doesn't work within Galaxy yet. 
+> These data can be dumped in `sam` format using the `sam-dump` tool in the SRA Toolkit, but this function doesn't work within Galaxy yet. 
 > We hope to include that functionality in a future update.
 >
 {: .comment}
@@ -77,16 +77,16 @@ Metadata for SARS-CoV-2 submissions to the SRA includes submitted sample and lib
 
 > ### {% icon comment %} Comment
 >
-> Some of these tables include complex data fields (array of values) that don't have a clean analogue in a classic SQL database or table and these can't be easily queried in Galaxy currently. If you require access to [cloud tables](https://www.ncbi.nlm.nih.gov/sra/docs/aligned-metadata-tables/) or fields not available in Galaxy recommend accessing those natively in [BigQuery](https://www.ncbi.nlm.nih.gov/sra/docs/sra-bigquery/) or [Athena](https://www.ncbi.nlm.nih.gov/sra/docs/sra-athena/).
+> Some of these tables include complex data fields (array of values) that don't have a clean analogue in a classic SQL database or table and these can't be easily queried in Galaxy currently. If you require access to [cloud tables](https://www.ncbi.nlm.nih.gov/sra/docs/aligned-metadata-tables/) or fields not available in Galaxy we recommend accessing those natively in [BigQuery](https://www.ncbi.nlm.nih.gov/sra/docs/sra-bigquery/) or [Athena](https://www.ncbi.nlm.nih.gov/sra/docs/sra-athena/).
 >
 {: .comment}
 
 
-We will import the JSON files into Galaxy to query them directory, however the files are split up for efficient querying in the cloud and updated daily, so we first need to get the most update-to-date list of files so we can import those to Galaxy. We'll just be using a couple of tables in this training, but the other tables can be imported in the same way, using the index files and awk command below.
+We will import the JSON files into Galaxy to query them directory, however the files are split up for efficient querying in the cloud and updated daily, so we first need to get the most up-to-date list of files so we can import those to Galaxy. We'll just be using a couple of tables in this training, but the other tables can be imported in the same way, using the index files and awk commands below.
 
 > ### {% icon tip %} Metadata tables for SARF
 >
-> The data for these tables can be found here:
+> The file index for these tables can be found here:
 >
 > * [https://storage.googleapis.com/nih-sequence-read-archive/SARS_COV_2/contigs.filelist](https://storage.googleapis.com/nih-sequence-read-archive/SARS_COV_2/contigs.filelist) 
 > * [https://storage.googleapis.com/nih-sequence-read-archive/SARS_COV_2/annotated_variations.filelist](https://storage.googleapis.com/nih-sequence-read-archive/SARS_COV_2/annotated_variations.filelist) 
@@ -106,12 +106,12 @@ We will import the JSON files into Galaxy to query them directory, however the f
 {: .comment}
 
 
-> ### {% icon hands_on %} Hands-on 1: Loading Sequence Aligned Read Format (SARF) Object Metadata into Galaxy
+> ### {% icon hands_on %} Hands-on 1: Loading SRA Aligned Read Format (SARF) Object Metadata into Galaxy
 >
->This step needs to repeated at the beginning of an analysis to refresh the metadata to the latest daily version.
+>This step needs to be repeated at the beginning of an analysis to refresh the metadata to the latest daily version.
 >
 > 1. Go to your Galaxy instance of choice such as one of the [usegalaxy.org](https://usegalaxy.org/), [usegalaxy.eu](https://usegalaxy.eu), [usegalaxy.org.au](https://usegalaxy.org.au) or any other. (This tutorial uses usegalaxy.org).
-> 2. If your history is not already empty, than start a new history (see [here](https://training.galaxyproject.org/training-material/topics/galaxy-interface/tutorials/history/tutorial.html) for more on Galaxy histories)
+> 2. If your history is not already empty, then start a new history (see [here](https://training.galaxyproject.org/training-material/topics/galaxy-interface/tutorials/history/tutorial.html) for more on Galaxy histories)
 > 3. Click the `Upload Data` button, then click `Paste/Fetch data`, and copy/paste the cloud address for the `contigs.filelist` table into the provide box:
 >```markdown
 > https://storage.googleapis.com/nih-sequence-read-archive/SARS_COV_2/contigs.filelist
@@ -121,7 +121,7 @@ We will import the JSON files into Galaxy to query them directory, however the f
 >
 > 4. Then click the `start` button followed by the `close` button. This download job should now appear to the right in your history bar. 
 > 5. From the history bar you can click on the `edit` icon to update the name, in this case we'll call it `contigs.json.list` and click the `save` button.
-> This files contains the filenames for all json files that comprise the current 'contigs' table.  It is necessary to import the latest version of this file because the metadata is updated daily. 
+> This file contains the filenames for all json files that comprise the current 'contigs' table. It is necessary to import the latest version of this file because the metadata is updated daily. 
 >
 > **Next we will convert this list of filenames to the HTTP URLs for easy import into Galaxy.**
 >
@@ -133,7 +133,7 @@ We will import the JSON files into Galaxy to query them directory, however the f
 > ```
 > ![Text Reformatting](../../images/contigs_new.PNG "Text Reformating with AWK") 
 >
-> 9. Click the `execute` button, then use the `edit` button the history item to rename the output to `contig_urls`.
+> 9. Click the `execute` button, then use the `edit` button on the history item to rename the output to `contig_urls`.
 >
 > > ### {% icon tip %} AWK commands for the other metadata tables
 > > We are not going to use all of these tables in this demo.
@@ -151,33 +151,31 @@ We will import the JSON files into Galaxy to query them directory, however the f
 >
 > **Now we'll import the json files into Galaxy and construct a table for filtering.**
 >
-> 10. Click the `view data` icon (looks like an eye) on the `contig_urls` history item, then select the entire set of lines and copy the text using either a mouse right click or keyboard shortcut.
-> 11. Click the `Upload Data` button, then select the `Rule-based` tab at the top.
+> 10. Click the `Upload Data` button, then select the `Rule-based` tab at the top.
 > > * `Upload data as > Datasets` 
 > > * `Load tabular data from > History Dataset` 
 > > * `History dataset > contig_urls`
-> 12. Click the `build` button, then in the `Build Rules for Uploading Collections`
+> 11. Click the `build` button, then in the `Build Rules for Uploading Collections`
 > > * `+Rules > add/modify column definitions`
 > > * `+Add definition > URL > Column A > apply`
 >
-> 13. Click the `upload` button.
+> 12. Click the `upload` button.
 > 
 > **Once those download jobs have all turned green in the history list, we'll concatenate these into a single file.**
 >
-![Import variation json files](../../images/variation_collection.PNG "Import Variation Json Files") 
 > 
-> 14. Select the `Concatenate multiple datasets tail-to-head` tool
-> 15. Click on the `multiple datasets` icon, then 
+> 13. Select the `Concatenate multiple datasets tail-to-head` tool
+> 14. Click on the `multiple datasets` icon, then 
 > > * Select the `jsonlines.gz` files we just downloaded and click `execute`. 
 > > * Rename this history item to `contigs.json`
 >
 > **The last step in loading the data from the json files is to convert the entries to tabular format using the `JQ` tool**
 > 
-> 16. Using the `Search Tools` box on the upper left side of the Galaxy board, enter `json` and click on `JQ`, it should be near the top of suggested items.
-> 17. Enter the filename `contigs.json` that was just created in the `json input` box
-> 18. To import the entire json file without filters, enter ` [.[]]` in the `jq filter` box
-> 19. Select `yes` under `convert output to tabular`, then click the `execute` button. 
-> 20. Rename this file `contigs.tsv` using the `edit` icon on the tables history item
+> 15. Using the `Search Tools` box on the upper left side of the Galaxy board, enter `json` and click on `JQ`, it should be near the top of suggested items.
+> 16. Select the `contigs.json` file that was just created in the `json input` box
+> 17. To import the entire json file without filters, enter ` [.[]]` in the `jq filter` box
+> 18. Select `yes` under `convert output to tabular`, then click the `execute` button. 
+> 19. Rename this file `contigs.tsv` using the `edit` icon on the tables history item
 >
 {: .hands_on}
 
@@ -187,9 +185,9 @@ We will import the JSON files into Galaxy to query them directory, however the f
 Now that a table has been generated, we will query the table to find the runs of interest.  It is a good idea to save the table for future queries on the same dataset.  Rerunning the import steps above without filtration will provide a different set of metadata each day.
 
 > ### {% icon hands_on %} Hands-on 2: Query the SRA Metadata Table using SQLite
-> Next we'll query this metadata using the `Query tabular` tool to get a list of all Runs containing contigs of greater than 20,000 nucleotides and average coverage greater of at least 100X. \<update this query to give smaller set for demo purposes\>
-> 1. In the Search Tools Box in the upper left corner of the Galaxy board, type `Query` to find the tool `Query Tabular` for the next steps.
-> 2. Click `insert database table`, select `contigs.tsv`
+> Next we'll query this metadata using the `Query tabular` tool to get a list of all Runs containing contigs of greater than 20,000 nucleotides and average coverage of at least 100X. 
+> 1. In the Search Tools Box in the upper left corner of the Galaxy board, type `sql` to find the tool `Query Tabular` for the next steps.
+> 2. Click `insert database table`, for `Tabular Dataset for Table` select `contigs.tsv` 
 > 3. Click `table options`, 
 > > * for `specify name for table` enter `SARS_contigs`, 
 > > * for `Specify Column Names` enter:
@@ -203,7 +201,7 @@ Now that a table has been generated, we will query the table to find the runs of
 > > 
 > > [https://www.ncbi.nlm.nih.gov/sra/docs/sra-cloud-based-examples/](https://www.ncbi.nlm.nih.gov/sra/docs/sra-cloud-based-examples/)
 > > 
-> > [https://www.ncbi.nlm.nih.gov/sra/docs/aligned-metadata-tables/](https://www.ncbi.nlm.nih.gov/sra/docs/sra-cloud-based-examples/)
+> > [https://www.ncbi.nlm.nih.gov/sra/docs/aligned-metadata-tables/](https://www.ncbi.nlm.nih.gov/sra/docs/aligned-metadata-tables/)
 > >
 > > **contigs**
 > > ```
@@ -257,7 +255,7 @@ Now that a table has been generated, we will query the table to find the runs of
 {: .tip}
 
 > ### {% icon tip %} Importing a list of SRR from Athena or BigQuery
-> If you opted to conduct your metadata search in the cloud using AWS Athena or GCP BigQuery instead of importing the json file to Galaxy, you can save a list of your Runs accessions from that search result and import that file as the 'Run_list' to proceed with the rest of this tutorial.
+> If you opted to conduct your metadata search in the cloud using AWS Athena or GCP BigQuery instead of importing the json file to Galaxy, you can save a list of your Run accessions from that search result and import that file as the 'Run_list' to proceed with the rest of this tutorial.
 {: .tip}
 
 
@@ -278,14 +276,12 @@ Now that we have assembled a list of Runs that have contigs we are interested in
 > **Bringing in the SARF contig files for Runs of Interest**
 > 5. Click the `upload data` button, 
 > > * select the `Rule based` tab, 
-> > * `upload data as` > `collection`, 
+> > * `upload data as` > `datasets`, 
 > > * `load tabular data from` > `history dataset`, 
 > > * select `sarf_path` from the popup box.
 > 6. In the `Build Rules for Uploading Collections`:
 > > * `+Rules > add/modify column definitions`
 > > * `>+Add definition > URL > Column A > apply`
-> > * `+Column > row number >starting from 1 > apply`
-> > * `+Rules > add/modify column definitions >+Add definition > List Identifier > Column B > apply`
 > 7. Click the `upload` button.
 > 
 > ![SQLite Input](../../images/sarf_download.PNG "Query Table with SQLite") 
@@ -299,18 +295,18 @@ Now that we have assembled a list of Runs that have contigs we are interested in
 > *Finally we will use the SRA toolkit to dump the contigs in fasta format.*
 > 8. Select the `Download and Extract Reads in FASTA/Q` tool.
 `Select input type` > SRA Archive in current history
-sra archive > dataset collection > `sarf_set`
-> 9. Click `advanced options`, in the `Table name within cSRA object` enter `REFERENCE`
+sra archive > multiple datasets > select each .realign object
+> 9. Click `advanced options`, for `Table name within cSRA object` enter `REFERENCE`
 > 10. Click `execute`.
 >
 > ![Load Contigs in Fasta Format](../../images/fastq-dump.PNG "Load Contigs in Fastq Format") 
 > 
-> The resulting dataset includes the fasta contigs generated from these Runs.
+> The resulting dataset includes the contigs generated from these Runs.
 > 
 > > ### {% icon tip %} Fastq format option
-> > If you prefer to dump the data in fastq format with placeholder quality scores, leave the `Table name within cSRA object` field blank.  
+> > If you prefer to dump the raw reads in fastq format with placeholder quality scores, leave the `Table name within cSRA object` field blank.  
 > >
-> > This will generate fastq quality placeholders `?`, as these are contigs that were assembled from raw reads and do not have quality scores.
+> > This will generate fastq with quality placeholders `?`, as SARFs do not contain quality scores.
 > {: .tip}
 {: .hands_on}
 
@@ -334,23 +330,63 @@ Metadata about these Runs, including submitted sample and library information, B
 > ```
 > 2. Click the `start` button followed by the `close` button. This download job should now appear to the right in your history bar.
 > 3. From the history bar you can click on the `edit` icon to update the name, in this case we'll call it `annotated_variation.json.list` and click the `save` button.
->  This files contains the filenames for all json files that comprise the current `annotated variation` table. It is necessary to always import the latest version because these dumps are updated daily (and the filenames contain the current date). 
->
+>  This files contains the filenames for all json files that comprise the current `annotated variation` table. It is necessary to always import the latest version  because these dumps are updated daily (and the filenames contain the current date). 
+
 > **Next we will convert this list of filenames to the HTTP URLs for easy import into Galaxy.**
+> 4. Select the `text reformatting with awk` tool.
+> 5. For `file to process` select `annotated_variation.json.list`.
+> 6. In the `AWK program` box enter:
 >
-> Now that we have assembled a list of Runs that have VCFs we are interested in, we'll construct the path to the VCF files in the cloud and import those to Galaxy so we can work with them.
-> 1. Select the `text reformatting with awk` tool.
-> 2. For `file to process` select `VCF_list`.
-> 3. In the `AWK program` box enter:
-> ```markdown
 > {print "https://storage.googleapis.com/nih-sequence-read-archive/SARS_COV_2/annotated_variations/"$0}
 >
-> ```
-> 4. Click the `execute` button, rename the output to `variation_urls`.
+> 7. Click the `execute` button, then use the `edit` button the history item to rename the output to `variation_urls`.
+>
+> Now we'll import the individual json files that comprise the annotated variation table into Galaxy.
+>
+> 8. Click the `Upload Data` button, then select the `Rule-based` tab at the top.
+> > * `Upload data as > Datasets` 
+> > * `Load tabular data from > History Dataset` 
+> > * `History dataset > variation_urls`
+> 9. Click the `build` button, then in the `Build Rules for Uploading Collections`
+> > * `+Rules > add/modify column definitions`
+> > * `+Add definition > URL > Column A > apply`
+>
+> 10. Click the `upload` button.
+>
+> **Once those download jobs have all turned green in the history list, we'll concatenate these into a single file.**
+>
+> 
+> 11. Select the `Concatenate multiple datasets tail-to-head` tool
+> 12. Click on the `multiple datasets` icon, then 
+> > * Select the `jsonlines.gz` files we just downloaded and click `execute`. 
+> > * Rename this history item to `variation.json`
+>
+> Next we'll run the `JQ` tool on this file to convert it to a tabular format.  
+> 13. Type `json` in the `search tools` box and `JQ` should be one of the top suggested items, click on the tool.
+> 14. For `json input` you'll select the `variation.json` file we just created.
+> 15. We want to import the entire json file, so in the `jq filter` box enter: [.[]]
+> 16. Select `yes` under `convert output to tabular`, then click the `execute` button.
+> 17. Rename this file `variation.tsv` using the `edit` icon on its history item.
+
+**Query for VCFs of Interest**
+>Next we'll query this metadata using the `Query tabular` tool to get a list of all Runs containing a called `E484K` variant.
+>
+> 1. Click `insert database table`, select `variation.tsv`
+> 2. Click `table options`, under `specify name for table` enter `sars_variation`, under `Specify Column Names` enter:
+>  ```markdown
+>run,chrom,pos,id,ref,alt,qual,filter,info,format,sample_a,ac,an,bqb,dp,dp4,dp4_1,dp4_2,dp4_3,dp4_4,idv,imf,mq,mq0f,mqb,mqsb,rpb,sgb,vdb,g_gt,g_pl,g_pl_1,g_pl_2,g_dp,g_ad,g_ad_1,g_ad_2,protein_position,ref_codon,alt_codon,ref_aa,alt_aa,protein_name,protein_length,variation
+>  
+>  ```
+> 3. In the `SQL Query to generate tabular output` box enter: 
+>```markdown
+> SELECT distinct run FROM sars_variation where variation = `E484K` and run like `%SRR%` order by run asc limit 10
+>```
+> 4. Select `no` for `include query result column headers`
+> 5. Click the `execute` button and rename the output file to `vcf_list`
 >
 > Now that we have assembled a list of Runs that have VCFs we are interested in, we'll construct the path to the VCF files in the cloud and import those to Galaxy so we can work with them.
 > 5. Select the `text reformatting with awk` tool.
-> 6. For `file to process` select `VCF_list`.
+> 6. For `file to process` select `vcf_list`.
 > 7. In the `AWK program` box enter:
 > ```markdown
 > {print "https://sra-pub-sars-cov2.s3.amazonaws.com/VCF/"$0"/"$0".vcf"}
@@ -385,7 +421,7 @@ Metadata about these Runs, including submitted sample and library information, B
 
 
 # Other NCBI Resources
-* SRA in the Cloud:  https://www.ncbi.nlm.nih.gov/sra/docs/sra-cloud/
+* Getting started with SRA in the Cloud:  https://www.ncbi.nlm.nih.gov/sra/docs/sra-cloud/
 * NCBI SARS-CoV-2 Resources: https://www.ncbi.nlm.nih.gov/sars-cov-2/
 * STAT tool: https://www.ncbi.nlm.nih.gov/sra/docs/sra-taxonomy-analysis-tool/
 * SRA Aligned Read Format: https://www.ncbi.nlm.nih.gov/sra/docs/sra-aligned-read-format/
