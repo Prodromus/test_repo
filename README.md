@@ -172,6 +172,7 @@ We will import the JSON files into Galaxy to query them directory, however the f
 > > * Rename this history item to `contigs.json`
 >
 > **The last step in loading the data from the json files is to convert the entries to tabular format using the `JQ` tool**
+> 
 > 16. Using the `Search Tools` box on the upper left side of the Galaxy board, enter `json` and click on `JQ`, it should be near the top of suggested items.
 > 17. Enter the filename `contigs.json` that was just created in the `json input` box
 > 18. To import the entire json file without filters, enter ` [.[]]` in the `jq filter` box
