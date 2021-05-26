@@ -212,32 +212,26 @@ Now that a table has been generated, we will query the table to find the runs of
 > > **annotated_variations**
 > > ```
 > > run,chrom,pos,id,ref,alt,qual,filter,info,format,sample_a,ac,an,bqb,dp,dp4,dp4_1,dp4_2,dp4_3,dp4_4,idv,imf,mq,mq0f,mqb,mqsb,rpb,sgb,vdb,g_gt,g_pl,g_pl_1,g_pl_2,g_dp,g_ad,g_ad_1,g_ad_2,protein_position,ref_codon,alt_codon,ref_aa,alt_aa,protein_name,protein_length,variation
-> >
 > > ```
 > > **blastn**
 > > ```
 > > acc,qacc,staxid,sacc,slen,length,bitscore,score,pident,sskingdom,evalue,ssciname
-> >
 > > ```
 **metadata**
 > > ```
 > > acc,assay_type,center_name,consent,experiment,sample_name,instrument,librarylayout,libraryselection,librarysource,platform,sample_acc,biosample,organism,sra_study,releasedate,bioproject,mbytes,loaddate,avgspotlen,mbases,insertsize,library_name,biosamplemodel_sam,collection_date_sam,geo_loc_name_country_calc,geo_loc_name_country_continent_calc,ena_first_public_run,ena_last_update_run,sample_name_sam,datastore_filetype,datastore_provider,datastore_region,attributes,jattr
-> >
 > > ```
 > > **peptides**
 > > ```
 > > name,contig,mat_peptide,run,location,gene,product,ref_db,ref_id,sequence
-> >
 > > ```
 > > **tax_analysis**
 > > ```
 > > run,contig,tax_id,rank,name,total_count,self_count,ilevel,ileft,iright
-> > 
 > > ```
 > > **variations**
 > > ```
 > > run,chrom,pos,id,ref,alt,qual,filter,info
-> >
 > > ```
 > >
 > > 
